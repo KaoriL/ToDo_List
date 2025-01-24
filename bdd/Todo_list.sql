@@ -1,0 +1,15 @@
+CREATE DATABASE todo_list;
+
+USE todo_list;
+
+CREATE TABLE tache(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(255) NOT NULL,
+    description TEXT,
+    status ENUM('pending','completed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+ALTER TABLE tache
+ADD COLUMN assigned_date DATE DEFAULT CURRENT_DATE;
