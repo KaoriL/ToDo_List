@@ -7,7 +7,7 @@
     <title>Accueil</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=1.5">
+    <link rel="stylesheet" href="style.css?v=1.6">
 </head>
 
 <body>
@@ -71,7 +71,7 @@
     </section>
     <!---------------------------------------------- Pop up de création----------------------------------------------------------->
 
-    <div id="popUp" class="popUp <?= isset($message) ? 'open' : '' ?>">
+    <div id="popUp" class="popUp <?= !empty($message) ? 'open' : '' ?>">
         <div class="popUp-content">
             <h3>Créer une tâche</h3>
 
@@ -85,7 +85,7 @@
                 <label for="assigned_date">Date</label>
                 <input type="date" name="assigned_date" id="assigned_date" value="<?= date('Y-m-d'); ?>">
 
-                <button type="submit">Ajouter</button>
+                <button class="input-ajout" type="submit">Ajouter</button>
 
                 <button style="background-color:red;" type="button" onclick="closePopup()">Annuler</button>
             </form>
@@ -120,8 +120,8 @@
         <input type="submit" value="Sauvegarder">
     </form>
 </div> -->
-    
- <!-- ===================== SCRIPTS ===================== -->
+
+    <!-- ===================== SCRIPTS ===================== -->
 
     <script>
 

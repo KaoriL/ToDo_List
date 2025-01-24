@@ -150,24 +150,7 @@ overflow-y: scroll;
     width: 100%;
 }
 
-/*Pop up de Création et Description*/
-
-.popup{
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgb(231, 231, 231);
-    padding: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 4;
-    width: 300px;
-    color:rgb(27, 27, 27);
-    font-family: 'Poppins';
-    border-radius: 10px;
-
-}
+/*--------------------Pop up de Création et Description---------------------*/
 
 .input-ajout{
     padding: 10px;
@@ -177,17 +160,6 @@ overflow-y: scroll;
     background-color: rgb(45, 162, 19);
     border-radius: 10px;
     border: solid transparent;
-}
-
-.popup-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 3;
 }
 
 .close-popup {
@@ -202,35 +174,6 @@ overflow-y: scroll;
     top: 10px;
     right: 10px;
     border-radius: 30px;
-}
-
-#form-creation{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
-}
-
-#form-creation label{
-    width: 100%;
-}
-
-#form-creation textarea{
-    width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: solid transparent;
-    background-color: rgb(181, 181, 181) ;
-    border-radius: 8px;
-    padding: 5px;
-    font-family: 'Poppins';
-}
-
-#creation-titre{
-    border: solid transparent;
-    background-color: rgb(181, 181, 181) ;
-    border-radius: 8px;
-    padding: 5px;
-    font-family: 'Poppins';
 }
 
 h3{
@@ -251,6 +194,7 @@ h3{
     justify-content: center;
     align-items: center;
     z-index: 2;
+    
   }
   .popUp-content {
     background-color: #222;
@@ -260,6 +204,9 @@ h3{
     border-radius: 8px;
     text-align: center;
     color: white;
+    font-family: 'Poppins';
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .popUp.open {
@@ -275,7 +222,7 @@ h3{
     border-radius: 10px;
   }
 
-/* FONT*/
+/*------------------- FONT-------------------------------*/
 @font-face {
     font-family: 'Poppins';
     src: url('assets/font/Poppins/Poppins-Regular.ttf') format('truetype');

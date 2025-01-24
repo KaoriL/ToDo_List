@@ -42,7 +42,9 @@ class TacheController
             $result = Tache::creerTache($titre, $description, $date);
 
             if ($result) {
-                $message = "Tâche créée avec succès !";
+               //Rediriger après la création réussi
+               header('Location: index.php?action=afficher');
+               exit;
             } else {
                 $message = "Erreur lors de la création de la tâche.";
             }
