@@ -7,11 +7,13 @@
     <title>Accueil</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=1.6">
+    <link rel="stylesheet" href="style.css?v=1.7">
 </head>
 
 <body>
     <section>
+
+        <!------------------------------------- Ajouter une tâche -------------------------------->
         <div class="add">
             <div class="add-todo">
                 <h2 id="jour"></h2>
@@ -21,7 +23,7 @@
         </div>
 
 
-
+        <!------------------------------------- Tache du jour -------------------------------->
         <div class="Todo-day">
             <h2>Aujourd'hui</h2>
             <h4 class="no-tasks-message" style="display: none;">Il n'y a aucune tâche pour aujourd'hui.</h4>
@@ -30,9 +32,9 @@
                 <!--Affichage des tâches depuis la base de données-->
                 <?php if (!empty($tachesaujourdhui)): ?>
                     <?php foreach ($tachesaujourdhui as $tache): ?>
-                        <li
-                            onclick="ouvrirPopup(<?php echo $tache['id']; ?>, '<?php echo addslashes($tache['titre']); ?>', '<?php echo addslashes($tache['description']); ?>')">
-                            <input type="checkbox" <?= $tache['status'] === 'completed' ? 'checked' : '' ?>>
+                        <li>
+                            <input class="checkbox-terminer" type="checkbox" data-id="<?= $tache['id'] ?>"
+                                <?= $tache['date_terminee'] ? 'checked disabled' : '' ?>>
                             <?= htmlspecialchars($tache['titre']) ?>
                             <!--<a href="/modifier/<?= $tache['id'] ?>">Modifier</a>-->
                             <!--<a href="/supprimer/<?= $tache['id'] ?>">Supprimer</a>-->
@@ -41,7 +43,7 @@
                 <?php endif; ?>
             </ul>
         </div>
-
+        <!------------------------------------- Tache du futur -------------------------------->
         <div class="Todo-Futur">
             <h2>Futur</h2>
             <h4 class="no-tasks-message" style="display: <?= empty($tachesFutures) ? 'block' : 'none'; ?>">Aucune tâche
@@ -55,15 +57,26 @@
                             onclick="ouvrirPopup(<?php echo $tache['id']; ?>, '<?php echo addslashes($tache['titre']); ?>', '<?php echo addslashes($tache['description']); ?>')">
                             <input type="checkbox" <?= $tache['status'] === 'completed' ? 'checked' : '' ?>>
                             <?= htmlspecialchars($tache['titre']) ?>
-                            <span><?= date('d-m', strtotime($tache['assigned_date'])) ?></span>
+                            <span class="date"><?= date('d-m', strtotime($tache['assigned_date'])) ?></span>
                         </li>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </ul>
+        </div>
 
+        <!------------------------------------- Tache terminée -------------------------------->
 
-
-
+        <div>
+            <h2>Tâches terminées aujourd'hui</h2>
+            <?php if (!empty($tachesTermineesAujourdhui)): ?>
+                <?php foreach ($tachesTermineesAujourdhui as $tache): ?>
+                    <div class="tache terminee">
+                        <label><?= htmlspecialchars($tache['titre']) ?></label>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Aucune tâche terminée aujourd'hui.</p>
+            <?php endif; ?>
         </div>
 
 
@@ -75,7 +88,15 @@
         <div class="popUp-content">
             <h3>Créer une tâche</h3>
 
+            <!--MESSAGE D'ERREUR -->
+            <?php if (isset($message)): ?>
+                <div class="error-message">
+                    <?= htmlspecialchars($message) ?>
+                </div>
+            <?php endif; ?>
+
             <form action="index.php?action=creer" method="POST">
+
                 <label for="creation-titre">Titre*</label>
                 <input type="text" name="titre" id="creation-titre" placeholder="Entrez un titre" required>
 
@@ -83,19 +104,17 @@
                 <textarea name="description" id="creation-description" rows="4"
                     placeholder="Descritpion de la tâche"></textarea>
                 <label for="assigned_date">Date</label>
-                <input type="date" name="assigned_date" id="assigned_date" value="<?= date('Y-m-d'); ?>">
-
-                <button class="input-ajout" type="submit">Ajouter</button>
-
-                <button style="background-color:red;" type="button" onclick="closePopup()">Annuler</button>
-            </form>
-
-            <!--MESSAGE D'ERREUR -->
-            <?php if (isset($message)): ?>
-                <div class="error-message">
-                    <?= htmlspecialchars($message) ?>
+                <input type="date" name="assigned_date" id="assigned_date" value="<?= date('Y-m-d'); ?>"
+                    min="<?= date('Y-m-d'); ?>">
+                <div class="bouton">
+                    <button class="input-ajout" type="submit">Ajouter</button>
+                    <button class="close-popup" type="button" onclick="closePopup()">Annulez</button>
                 </div>
-            <?php endif; ?>
+
+
+
+
+            </form>
         </div>
     </div>
 
@@ -184,10 +203,49 @@
 
 
 
+        /////////////////////////////// ENREGISTRER L'ÉTAT TERMINÉ /////////////////////////////////////////
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkboxes = document.querySelectorAll('.checkbox-terminer');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const tacheId = this.getAttribute('data-id');
+                    const estTerminee = this.checked;
+
+                    if (estTerminee) {
+                        fetch('index.php?action=terminerTache', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: tacheId })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erreur réseau');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    alert(data.message); // Message de succès
+                                    location.reload(); // Recharge la page pour actualiser
+                                } else {
+                                    alert(data.message || 'Erreur inconnue');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Erreur lors du fetch :', error);
+                                alert('Une erreur est survenue.');
+                            });
+                    }
+                });
+            });
+        });
 
 
 
-        //Date
+
+        //////////////////////////////////// DATE ////////////////////////////////////////
         //Obtenir la date
         const today = new Date();
         //Formater le jour de la semaine

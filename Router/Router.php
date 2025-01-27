@@ -9,7 +9,7 @@ class Router
         $action = isset($_GET['action']) ? $_GET['action'] : 'afficher';
 
         $controller = new TacheController();
-
+ 
         switch ($action) {
             case 'afficher':
                 $controller->afficherTaches();
@@ -23,8 +23,12 @@ class Router
             case'verifierDoublon':
                 $controller->verifierDoublonAjax();
                 break;
+            case'terminerTache':
+                $controller->terminerTache();
+                break;
+
             default:
-            echo "Action non reconnu.";
+            echo json_encode(['success' => false, 'message' => 'Action non reconnue']);
             break;
         }
 
